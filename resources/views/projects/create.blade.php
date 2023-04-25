@@ -34,6 +34,25 @@
                     <option value=" {{ $type->id }}">{{ $type->label }}</option>
                 @endforeach
             </select>
+
+            <label class="form-label">Technologies</label>
+
+            <div class="form-check">
+                @foreach ($technologies as $technology)
+                    <input
+                        type="checkbox"
+                        id="technology-{{ $technology->id }}"
+                        value="{{ $technology->id }}"
+                        name="technologies[]"
+                        class="form-check-control"
+                        
+                    >
+                    <label for="technology-{{ $technology->id }}">
+                        {{ $technology->label }}
+                    </label>
+                    <br>
+                @endforeach
+            </div>
         
             <button type="submit" class="btn btn-primary">Salva</button>
         </form>

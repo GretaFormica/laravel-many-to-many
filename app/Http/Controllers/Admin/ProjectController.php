@@ -29,7 +29,8 @@ class ProjectController extends Controller
     {
         $project = new Project;
         $types = Type::all();
-        return view('projects.create', compact('project', 'types'));
+        $technologies = Technology::orderBy('label')->get();
+        return view('projects.create', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -44,6 +45,7 @@ class ProjectController extends Controller
         $project = new Project;
         $project->fill($data);
         $project->save();
+        if(Arr::exists($data, "technologies")) $project->technologies()->attach($data["technologies"]);
         return redirect()->route('projects.index');
     }
 
@@ -67,6 +69,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
+        $technologies = Technology::orderBy('label')->get();
+        $project_technologies = $project->technologies->pluck('id')->toArray();
         return view('projects.edit', compact('project', 'types'));
     }
 
@@ -81,6 +85,11 @@ class ProjectController extends Controller
     {
         $data = $request->all();
         $project->update($data);
+        if(Arr::exists($data, "technologies"))
+            $project->technologies()->sync($data["technologies"]);
+        else
+            $project->technologies()->detach();
+
         return redirect()->route('projects.index');
     }
 
@@ -92,6 +101,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->detach();
         $project->delete();
         return redirect()->route('projects.index');
     }

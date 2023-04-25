@@ -25,6 +25,13 @@
                         <h5 class="card-title">Album: {{ $project->image}}</h5>
                         <h5 class="card-title">Autore: {{ $project->text}}</h5>
                         <h5 class="card-title">Tipo: {{ $project->type?->label}}</h5>
+                        <h5 class="card-title">Tecnologia: 
+                            @forelse($project->technologies as $technology)
+                            {{ $technology->label }} @unless($loop->last) , @else . @endunless
+                            @empty
+                            -
+                            @endforelse
+                        </h5>
                 
                         {{-- <a href="{{ route('music.show', ['music' => $music])}}">dettaglio</a> --}}
 
